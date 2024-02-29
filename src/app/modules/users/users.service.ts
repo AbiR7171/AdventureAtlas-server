@@ -20,6 +20,30 @@ const createUserIntoDB = async(user: TUser)=>{
 }
 
 
+const getAUserFromDB = async (nameOrEmail : string) =>{
+
+    const user = await User.findOne(
+        {
+            "$or": 
+            [
+                { "userName": {$regex: nameOrEmail}},
+                { "email": {$regex: nameOrEmail}}
+            ]
+        }
+    )
+
+
+    if(!user){
+        throw new Error("No user Found")
+    }
+
+    return user
+
+          
+}
+
+
 export const userService = {
-     createUserIntoDB
+     createUserIntoDB,
+     getAUserFromDB
 }
