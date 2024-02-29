@@ -43,7 +43,20 @@ const getAUserFromDB = async (nameOrEmail : string) =>{
 }
 
 
+const getAUserWithIdFromDB = async (id : string) =>{
+
+    const result = await User.findById(id);
+
+    console.log(result);
+
+    return result
+
+          
+}
+
+
 export const userService = {
      createUserIntoDB,
-     getAUserFromDB
+     getAUserFromDB,
+     getAUserWithIdFromDB
 }
