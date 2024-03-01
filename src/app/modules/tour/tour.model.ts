@@ -2,9 +2,8 @@ import { Schema, model } from "mongoose";
 import { TMembers, TTour } from "./tour.interface";
 
 const memberSchema =  new Schema<TMembers>({
-     name: {type: String, required: [true, "name is required"]},
-     initialAmount:{type: Number},
-     membersInfo:{type: Schema.Types.ObjectId, ref: "User"}
+      initial:{type: String},
+     membersInfo:{type: Schema.Types.ObjectId,required:true, ref: "User"}
 })
 
 const tourSchema = new Schema<TTour>(

@@ -2,9 +2,8 @@ import { Types } from "mongoose";
 
 
 export type TMembers = {
-     name: string,
      membersInfo: Types.ObjectId,
-     initialAmount: number
+     initial: string
 }
 
 export type TTour = {

@@ -55,8 +55,15 @@ const getAUserWithIdFromDB = async (id : string) =>{
 }
 
 
+const getAllUser = async () =>{
+     const result = await User.find().sort({_id:-1});
+     return result
+}
+
+
 export const userService = {
      createUserIntoDB,
      getAUserFromDB,
-     getAUserWithIdFromDB
+     getAUserWithIdFromDB,
+     getAllUser
 }
