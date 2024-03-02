@@ -1,4 +1,4 @@
-import { TMembers, TTour } from "./tour.interface";
+import { TExpense, TMembers, TTour } from "./tour.interface";
 import { Tour } from "./tour.model";
 
 const createTourIntoDB = async (tour: TTour) => {
@@ -14,7 +14,7 @@ const getSingleUserTourFromDB = async (id: string) => {
       path: "members",
       populate: {
         path: "membersInfo",
-        model: "User", // Specify the model that 'membersInfo' refers to
+        model: "User",
       },
     });
   return tours;
@@ -29,7 +29,7 @@ const addMembersFromDB = async (id: string, members: TMembers[]) => {
     member.membersInfo.toString()
   );
 
-  // Filter out members that already exist in the tour
+ 
   const newMembers = members.filter(
     (member) => !existingMembersInfo?.includes(member.membersInfo.toString())
   );
@@ -43,8 +43,75 @@ const addMembersFromDB = async (id: string, members: TMembers[]) => {
   return result;
 };
 
+
+const deleteATourFromDB = async(id: string)=>{
+   
+    const result = await Tour.deleteOne({_id: id});
+    return result
+}
+
+
+const getASingleTourDataFromDB = async(id :string) =>{
+
+    const  result = await Tour.findOne({_id:id}).populate("admin").populate({
+      path: "members",
+      populate: {
+        path: "membersInfo",
+        model: "User", 
+      },
+    })
+
+
+    return result
+}
+
+
+
+const editTourFromDB = async(id: string, updateDoc:TTour)=>{
+   
+     const result = await Tour.updateOne(
+      {_id: id},
+      {  $set : 
+        {
+           tourName: updateDoc.tourName,
+           price: updateDoc.price,
+           startDate: updateDoc.startDate,
+           endDate: updateDoc?.endDate
+        }
+      }
+     )
+
+     return result
+}
+
+
+const handleExpenseFromDB = async(id: string, expense: TExpense)=>{
+   
+  const result =  await Tour.updateOne(
+    {_id: id},
+    { $push: { expense: expense}},
+    { new: true }
+  ).populate({
+    path: "expense",
+    populate: {
+      path: "spender",
+      model: "User", 
+    },
+  })
+
+  return result
+}
+
+
+
+
 export const tourServices = {
   createTourIntoDB,
   getSingleUserTourFromDB,
   addMembersFromDB,
+  deleteATourFromDB,
+  getASingleTourDataFromDB,
+  editTourFromDB,
+  handleExpenseFromDB,
+  
 };

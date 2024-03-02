@@ -81,9 +81,118 @@ const addMembers = async (req: Request, res: Response) =>{
      }
 }
 
+const deleteATour = async (req: Request, res: Response) =>{
+
+    try{
+       const {id} = req.params;
+
+       console.log(id);
+
+       const result = await tourServices.deleteATourFromDB(id as string)
+
+        
+       res.status(200).json({
+           success: true,
+           message: "Tour deleted successfully",
+           data: result
+       })
+
+    }catch(err : any){
+       console.log(err);
+       res.status(200).json({
+           success: false,
+           message: err.message || "something went wrong",
+           data: err
+       }) 
+    }
+}
+
+const getASingleTourData = async (req: Request, res: Response) =>{
+
+    try{
+       const {id} = req.params;
+
+
+       const result = await tourServices.getASingleTourDataFromDB(id as string)
+
+        
+       res.status(200).json({
+           success: true,
+           message: "Tour data find successfully",
+           data: result
+       })
+
+    }catch(err : any){
+       console.log(err);
+       res.status(200).json({
+           success: false,
+           message: err.message || "something went wrong",
+           data: err
+       }) 
+    }
+}
+
+
+const editTour = async(req:Request, res: Response) =>{
+       
+ try{
+    const {id} =req.params;
+    const updateDoc = req.body
+
+    console.log(id, updateDoc);
+    const result = await tourServices.editTourFromDB(id, updateDoc)
+
+    res.status(200).json({
+     success: true,
+     message: "Tour data find successfully",
+     data: result
+ })
+ }catch(err : any){
+    console.log(err);
+    res.status(200).json({
+        success: false,
+        message: err.message || "something went wrong",
+        data: err
+    }) 
+ }
+
+}
+
+
+const handleExpense = async(req:Request, res: Response) =>{
+       
+    try{
+       const {id} =req.params;
+       const expenseDoc = req.body
+   
+       console.log(id, expenseDoc);
+       const result = await tourServices.handleExpenseFromDB(id, expenseDoc)
+   
+       res.status(200).json({
+        success: true,
+        message: "Expense added  successfully",
+        data: result
+    })
+    }catch(err : any){
+       console.log(err);
+       res.status(200).json({
+           success: false,
+           message: err.message || "something went wrong",
+           data: err
+       }) 
+    }
+   
+   }
+
+  
 
 export const tourController = {
      createTour,
      getSingleUserTour,
-     addMembers
+     addMembers,
+     deleteATour,
+     getASingleTourData,
+     editTour,
+     handleExpense,
+     
 }

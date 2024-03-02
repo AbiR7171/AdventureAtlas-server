@@ -1,10 +1,19 @@
 import { Schema, model } from "mongoose";
-import { TMembers, TTour } from "./tour.interface";
+import { TExpense, TMembers, TTour } from "./tour.interface";
 
 const memberSchema =  new Schema<TMembers>({
       initial:{type: String},
      membersInfo:{type: Schema.Types.ObjectId,required:true, ref: "User"}
 })
+
+const expenseSchema = new Schema<TExpense>(
+    {
+        spender: {type: Schema.Types.ObjectId, required: true, ref:"User"},
+        date:{ type: String},
+        cost:{type: Number, required:true},
+        description:{type:String, required:true}
+    }
+) 
 
 const tourSchema = new Schema<TTour>(
     {
@@ -13,7 +22,8 @@ const tourSchema = new Schema<TTour>(
         startDate: {type: String},
         endDate: {type: String},
         admin: {type: Schema.Types.ObjectId, required: true, ref:"User"},
-        members: [memberSchema]
+        members: [memberSchema],
+        expense:[expenseSchema]
     },
     {
         timestamps: true
