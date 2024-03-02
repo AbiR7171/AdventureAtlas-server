@@ -3,13 +3,20 @@ import { Request, Response } from "express";
 import { tourServices } from "./tour.service";
 
 
+
+
+ 
+
+
 const createTour = async(req: Request, res: Response) =>{
      
      try{
 
-        const tour =req.body;
+    
 
-        console.log(tour);
+        const tour = req.body;
+        
+      
         const result = await tourServices.createTourIntoDB(tour)
 
         res.status(200).json({
@@ -29,6 +36,39 @@ const createTour = async(req: Request, res: Response) =>{
         }) 
      }
 }
+
+
+
+const imageUpload = async(req: Request, res: Response) =>{
+     
+    try{
+
+        const {id} = req.params
+        const imageName = req.file?.filename;
+
+        console.log(id, imageName);
+       
+     
+       const result = await tourServices.imageUploadIntoDB(id, imageName as string)
+
+       res.status(200).json({
+           success: true,
+           message: "Tour Created successfully",
+           data: result
+       })
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    }catch(err : any){
+       console.log(err);
+
+       res.status(401).json({
+           success: false,
+           message: err.message || "something went wrong",
+           data: err
+       }) 
+    }
+}
+
 
 
 const getSingleUserTour = async(req: Request, res: Response) =>{
@@ -194,5 +234,6 @@ export const tourController = {
      getASingleTourData,
      editTour,
      handleExpense,
+     imageUpload
      
 }

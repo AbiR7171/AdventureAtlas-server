@@ -8,6 +8,7 @@ import { tourRoute } from "./app/modules/tour/tour.route"
 
 app.use(cors())
 app.use(express.json())
+app.use(express.static("public"))
 app.use("/api/v1/user" ,userRoute )
 app.use("/api/v1/tour" , tourRoute )
 

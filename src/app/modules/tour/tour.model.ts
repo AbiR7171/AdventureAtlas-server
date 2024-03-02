@@ -23,7 +23,8 @@ const tourSchema = new Schema<TTour>(
         endDate: {type: String},
         admin: {type: Schema.Types.ObjectId, required: true, ref:"User"},
         members: [memberSchema],
-        expense:[expenseSchema]
+        expense:[expenseSchema],
+        image:{type: String}
     },
     {
         timestamps: true

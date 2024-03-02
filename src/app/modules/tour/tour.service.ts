@@ -6,6 +6,17 @@ const createTourIntoDB = async (tour: TTour) => {
   return result;
 };
 
+
+
+const imageUploadIntoDB = async (id: string,imageName: string) => {
+  const result = await Tour.updateOne(
+    {_id:id},
+    {$set : {image: imageName}}
+
+  );
+  return result;
+};
+
 const getSingleUserTourFromDB = async (id: string) => {
   const tours = await Tour.find({ admin: id })
     .sort({ _id: -1 })
@@ -57,6 +68,12 @@ const getASingleTourDataFromDB = async(id :string) =>{
       path: "members",
       populate: {
         path: "membersInfo",
+        model: "User", 
+      },
+    }).populate({
+      path: "expense",
+      populate: {
+        path: "spender",
         model: "User", 
       },
     })
@@ -113,5 +130,6 @@ export const tourServices = {
   getASingleTourDataFromDB,
   editTourFromDB,
   handleExpenseFromDB,
+  imageUploadIntoDB
   
 };

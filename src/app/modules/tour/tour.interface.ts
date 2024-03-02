@@ -1,6 +1,9 @@
 import { Types } from "mongoose";
 
 
+
+  
+
 export type TExpense = {
       spender :  Types.ObjectId,
       date?: string,
@@ -20,5 +23,6 @@ export type TTour = {
      endDate?: string,
      admin: Types.ObjectId,
      members?: TMembers[],
-     expense?:TExpense[]
+     expense?:TExpense[],
+     image?: string,
 }
