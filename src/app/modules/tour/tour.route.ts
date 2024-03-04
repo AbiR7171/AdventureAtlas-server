@@ -26,6 +26,7 @@ route.delete("/delete-tour/:id", tourController.deleteATour)
 route.get("/a-tour/:id", tourController.getASingleTourData)
 route.put("/edit-tour/:id", tourController.editTour)
 route.put("/add-expense/:id", tourController.handleExpense)
+route.get("/expense-list/:id", tourController.getASingleUserExpense)
 
 
 export const tourRoute = route;

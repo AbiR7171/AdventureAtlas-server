@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { TExpense, TMembers, TTour } from "./tour.interface";
 import { Tour } from "./tour.model";
 
@@ -6,13 +7,10 @@ const createTourIntoDB = async (tour: TTour) => {
   return result;
 };
 
-
-
-const imageUploadIntoDB = async (id: string,imageName: string) => {
+const imageUploadIntoDB = async (id: string, imageName: string) => {
   const result = await Tour.updateOne(
-    {_id:id},
-    {$set : {image: imageName}}
-
+    { _id: id },
+    { $set: { image: imageName } }
   );
   return result;
 };
@@ -40,7 +38,6 @@ const addMembersFromDB = async (id: string, members: TMembers[]) => {
     member.membersInfo.toString()
   );
 
- 
   const newMembers = members.filter(
     (member) => !existingMembersInfo?.includes(member.membersInfo.toString())
   );
@@ -54,73 +51,99 @@ const addMembersFromDB = async (id: string, members: TMembers[]) => {
   return result;
 };
 
+const deleteATourFromDB = async (id: string) => {
+  const result = await Tour.deleteOne({ _id: id });
+  return result;
+};
 
-const deleteATourFromDB = async(id: string)=>{
-   
-    const result = await Tour.deleteOne({_id: id});
-    return result
-}
-
-
-const getASingleTourDataFromDB = async(id :string) =>{
-
-    const  result = await Tour.findOne({_id:id}).populate("admin").populate({
+const getASingleTourDataFromDB = async (id: string) => {
+  const result = await Tour.findOne({ _id: id })
+    .populate("admin")
+    .populate({
       path: "members",
       populate: {
         path: "membersInfo",
-        model: "User", 
+        model: "User",
       },
-    }).populate({
+    })
+    .populate({
       path: "expense",
       populate: {
         path: "spender",
-        model: "User", 
+        model: "User",
       },
-    })
+    });
+
+  return result;
+};
+
+const editTourFromDB = async (id: string, updateDoc: TTour) => {
+  const result = await Tour.updateOne(
+    { _id: id },
+    {
+      $set: {
+        tourName: updateDoc.tourName,
+        price: updateDoc.price,
+        startDate: updateDoc.startDate,
+        endDate: updateDoc?.endDate,
+      },
+    }
+  );
+
+  return result;
+};
+
+const handleExpenseFromDB = async (
+  id: string,
+  expense: TExpense,
+) => {
 
 
-    return result
-}
-
-
-
-const editTourFromDB = async(id: string, updateDoc:TTour)=>{
-   
-     const result = await Tour.updateOne(
-      {_id: id},
-      {  $set : 
-        {
-           tourName: updateDoc.tourName,
-           price: updateDoc.price,
-           startDate: updateDoc.startDate,
-           endDate: updateDoc?.endDate
-        }
-      }
-     )
-
-     return result
-}
-
-
-const handleExpenseFromDB = async(id: string, expense: TExpense)=>{
-   
-  const result =  await Tour.updateOne(
-    {_id: id},
-    { $push: { expense: expense}},
+  const result = await Tour.updateOne(
+    { _id: id },
+    { $push: { expense: expense } },
     { new: true }
   ).populate({
     path: "expense",
     populate: {
       path: "spender",
-      model: "User", 
+      model: "User",
     },
-  })
+  });
+
+  return result;
+};
+
+const getASingleUserExpenseFromDB = async (id: string) => {
+ 
+  
+    const result = await Tour.aggregate([
+      { $match: { _id: new mongoose.Types.ObjectId(id) } },
+      {
+             $lookup : {
+              from: 'User', 
+              localField: 'membersInfo', 
+              foreignField: '_id', 
+              as: 'populatedField' 
+             }
+      },
+      {$unwind: "$expense"},
+      { $group: { _id: "$expense.spender",
+      totalCost : {$sum : "$expense.cost"}
+    },
+   
+    
+        
+    },
+    ]);
+    console.log(result);
+
 
   return result
-}
 
 
-
+  
+};
 
 export const tourServices = {
   createTourIntoDB,
@@ -130,6 +153,6 @@ export const tourServices = {
   getASingleTourDataFromDB,
   editTourFromDB,
   handleExpenseFromDB,
-  imageUploadIntoDB
-  
+  imageUploadIntoDB,
+  getASingleUserExpenseFromDB
 };

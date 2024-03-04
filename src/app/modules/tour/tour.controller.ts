@@ -203,7 +203,8 @@ const handleExpense = async(req:Request, res: Response) =>{
        
     try{
        const {id} =req.params;
-       const expenseDoc = req.body
+       const expenseDoc = req.body;
+    
    
        console.log(id, expenseDoc);
        const result = await tourServices.handleExpenseFromDB(id, expenseDoc)
@@ -224,6 +225,34 @@ const handleExpense = async(req:Request, res: Response) =>{
    
    }
 
+
+   const getASingleUserExpense = async(req:Request, res: Response) =>{
+       
+    try{
+       const {id} =req.params;
+    
+       console.log(id);
+       const result = await tourServices.getASingleUserExpenseFromDB(id)
+   
+       res.status(200).json({
+        success: true,
+        message: "Expense cost find  successfully",
+        data: result
+    })
+    }catch(err : any){
+       console.log(err);
+       res.status(200).json({
+           success: false,
+           message: err.message || "something went wrong",
+           data: err
+       }) 
+    }
+   
+   }
+
+  
+
+
   
 
 export const tourController = {
@@ -234,6 +263,8 @@ export const tourController = {
      getASingleTourData,
      editTour,
      handleExpense,
-     imageUpload
+     imageUpload,
+     getASingleUserExpense
+     
      
 }

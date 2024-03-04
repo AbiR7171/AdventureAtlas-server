@@ -3,7 +3,7 @@ import { TExpense, TMembers, TTour } from "./tour.interface";
 
 const memberSchema =  new Schema<TMembers>({
       initial:{type: String},
-     membersInfo:{type: Schema.Types.ObjectId,required:true, ref: "User"}
+     membersInfo:{type: Schema.Types.ObjectId,required:true, ref: "User"},
 })
 
 const expenseSchema = new Schema<TExpense>(

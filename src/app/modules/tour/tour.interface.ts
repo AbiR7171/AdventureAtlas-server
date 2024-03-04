@@ -13,7 +13,7 @@ export type TExpense = {
 
 export type TMembers = {
      membersInfo: Types.ObjectId,
-     initial: string
+     initial: string,
 }
 
 export type TTour = {
